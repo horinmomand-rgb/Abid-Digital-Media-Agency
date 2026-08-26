@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ps" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NOVA AI Studio</title>
+<style>
+:root{--bg:#070914;--panel:#0d1120;--panel2:#11172a;--line:#232a43;--text:#f5f7ff;--muted:#9da7c2;--accent:#8b5cf6;--accent2:#22d3ee;--good:#22c55e}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(circle at 80% 10%,#31205d55,transparent 35%),radial-gradient(circle at 10% 80%,#0e749055,transparent 30%),var(--bg);color:var(--text);font-family:Tahoma,Arial,sans-serif;min-height:100vh}
+.app{display:grid;grid-template-columns:270px 1fr;min-height:100vh}.side{border-left:1px solid var(--line);padding:24px;background:#080b16dd;backdrop-filter:blur(20px)}
+.logo{display:flex;gap:12px;align-items:center;font-size:22px;font-weight:800;margin-bottom:35px}.logo i{width:42px;height:42px;border-radius:14px;background:linear-gradient(135deg,var(--accent),var(--accent2));box-shadow:0 10px 35px #8b5cf655}
+.nav button{width:100%;padding:14px 16px;margin:6px 0;border:1px solid transparent;border-radius:14px;background:transparent;color:var(--muted);text-align:right;font-size:15px;cursor:pointer}.nav button.active,.nav button:hover{background:linear-gradient(90deg,#8b5cf622,transparent);border-color:#8b5cf633;color:#fff}
+.tip{margin-top:35px;padding:16px;border:1px solid var(--line);border-radius:18px;background:linear-gradient(135deg,#ffffff05,#8b5cf611)}.tip b{display:block;margin-bottom:7px}.tip small{color:var(--muted);line-height:1.8}
+.main{padding:28px;max-width:1200px;width:100%;margin:auto}.top{display:flex;justify-content:space-between;align-items:center;margin-bottom:25px}.top h1{margin:0;font-size:30px}.status{padding:8px 12px;border:1px solid #22c55e44;border-radius:99px;color:#86efac;background:#22c55e10;font-size:12px}
+.page{display:none}.page.active{display:block}.hero{padding:28px;border:1px solid var(--line);border-radius:26px;background:linear-gradient(135deg,#ffffff08,#ffffff02);box-shadow:0 25px 70px #0005;margin-bottom:20px}.hero h2{font-size:26px;margin:0 0 8px}.hero p{color:var(--muted);margin:0}
+.card{background:#0c1020cc;border:1px solid var(--line);border-radius:24px;padding:22px;box-shadow:0 20px 60px #0004}.chatbox{height:430px;overflow:auto;padding:8px}.msg{max-width:82%;padding:14px 16px;border-radius:18px;margin:12px 0;line-height:1.8;white-space:pre-wrap}.user{margin-right:auto;background:linear-gradient(135deg,#7c3aed,#4f46e5)}.ai{margin-left:auto;background:#151b2e;border:1px solid var(--line)}
+.row{display:flex;gap:10px;margin-top:15px}.input{flex:1;background:#090d1a;border:1px solid var(--line);color:white;border-radius:16px;padding:15px;outline:0}.input:focus{border-color:#8b5cf6}.btn{border:0;border-radius:15px;padding:13px 20px;color:white;background:linear-gradient(135deg,var(--accent),#4f46e5);cursor:pointer;font-weight:700}.btn.secondary{background:#151b2e;border:1px solid var(--line)}
+.gen-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.preview{min-height:420px;border:1px dashed #39425f;border-radius:20px;display:flex;align-items:center;justify-content:center;background:#090d18;overflow:hidden}.preview img{max-width:100%;max-height:520px;display:block}.placeholder{text-align:center;color:var(--muted);padding:30px}.placeholder .icon{font-size:55px;margin-bottom:12px}.controls label{display:block;color:#cbd3e8;font-size:13px;margin:16px 0 7px}.select{width:100%;background:#090d1a;color:white;border:1px solid var(--line);padding:13px;border-radius:13px}
+.loader{display:none;text-align:center;color:#b9c1d8;padding:15px}.spin{display:inline-block;width:20px;height:20px;border:3px solid #ffffff22;border-top-color:#8b5cf6;border-radius:50%;animation:r 1s linear infinite;vertical-align:middle;margin-left:8px}@keyframes r{to{transform:rotate(360deg)}}
+@media(max-width:800px){.app{grid-template-columns:1fr}.side{position:sticky;top:0;z-index:5;border-left:0;border-bottom:1px solid var(--line);padding:12px}.logo{margin-bottom:10px}.nav{display:flex;gap:5px}.nav button{margin:0;text-align:center}.tip{display:none}.main{padding:16px}.gen-grid{grid-template-columns:1fr}.top h1{font-size:22px}}
+</style>
+</head>
+<body>
+<div class="app">
+<aside class="side">
+<div class="logo"><i></i><span>NOVA AI</span></div>
+<div class="nav">
+<button class="active" data-page="chat">💬 AI Chat</button>
+<button data-page="image">🎨 Image Studio</button>
+</div>
+<div class="tip"><b>✨ AI Studio</b><small>یو پاک، عصري او 3D-inspired AI ورک‌سپايس. Chat او Image Generation په یوه ځای کې.</small></div>
+</aside>
+
+<main class="main">
+<div class="top"><h1 id="title">AI Chat</h1><span class="status">● Ready</span></div>
+
+<section id="chat" class="page active">
+<div class="hero"><h2>له AI سره خبرې وکړئ</h2><p>پوښتنه، لیکنه، کوډ، ژباړه او نور.</p></div>
+<div class="card">
+<div id="chatbox" class="chatbox"><div class="msg ai">سلام! 👋 زه ستا AI مرستیال یم. څه درسره وکړم؟</div></div>
+<div class="row">
+<textarea id="chatInput" class="input" rows="2" placeholder="خپل پیغام ولیکئ..."></textarea>
+<button id="send" class="btn">استول ➤</button>
+</div><div id="chatLoader" class="loader"><span class="spin"></span>AI فکر کوي...</div>
+</div>
+</section>
+
+<section id="image" class="page">
+<div class="hero"><h2>🎨 Image Studio</h2><p>خپل خیال په تصویر بدل کړئ.</p></div>
+<div class="gen-grid">
+<div class="card controls">
+<label>Prompt</label>
+<textarea id="prompt" class="input" rows="8" placeholder="مثلاً: A futuristic Afghan city at sunset, cinematic, ultra detailed, 3D"></textarea>
+<label>Model</label>
+<select id="model" class="select"><option value="google/gemini-2.5-flash-image">Gemini Flash Image</option><option value="bytedance-seed/seedream-4.5">Seedream 4.5</option><option value="openai/gpt-5.4-image-2">GPT Image 2</option></select>
+<label>Aspect Ratio</label>
+<select id="ratio" class="select"><option value="1:1">1:1 Square</option><option value="16:9">16:9 Landscape</option><option value="9:16">9:16 Portrait</option></select>
+<button id="generate" class="btn" style="width:100%;margin-top:18px">✨ تصویر جوړ کړه</button>
+<div id="imageLoader" class="loader"><span class="spin"></span>تصویر جوړېږي...</div>
+</div>
+<div class="card preview" id="preview"><div class="placeholder"><div class="icon">🪄</div><b>ستاسې تصویر دلته ښکاري</b><br><small>Prompt ولیکئ او Generate کلیک کړئ.</small></div></div>
+</div>
+</section>
+</main>
+</div>
+
+<script>
+const API_KEY = "__OPENROUTER_API_KEY__";
+const BASE="https://openrouter.ai/api/v1";
+
+document.querySelectorAll(".nav button").forEach(b=>b.onclick=()=>{
+ document.querySelectorAll(".nav button").forEach(x=>x.classList.remove("active")); b.classList.add("active");
+ document.querySelectorAll(".page").forEach(x=>x.classList.remove("active")); document.getElementById(b.dataset.page).classList.add("active");
+ document.getElementById("title").textContent=b.dataset.page==="chat"?"AI Chat":"Image Studio";
+});
+
+let history=[];
+async function sendChat(){
+ const input=document.getElementById("chatInput"), text=input.value.trim(); if(!text)return;
+ addMsg(text,"user"); input.value=""; document.getElementById("chatLoader").style.display="block";
+ history.push({role:"user",content:text});
+ try{
+  const r=await fetch(BASE+"/chat/completions",{method:"POST",headers:{"Authorization":"Bearer "+API_KEY,"Content-Type":"application/json"},body:JSON.stringify({model:"openai/gpt-5.4",messages:history})});
+  const d=await r.json(); if(!r.ok)throw new Error(d.error?.message||"API error");
+  const answer=d.choices?.[0]?.message?.content||"ځواب ترلاسه نه شو.";
+  history.push({role:"assistant",content:answer}); addMsg(answer,"ai");
+ }catch(e){addMsg("خطا: "+e.message,"ai")}finally{document.getElementById("chatLoader").style.display="none"}
+}
+function addMsg(t,c){const box=document.getElementById("chatbox"),m=document.createElement("div");m.className="msg "+c;m.textContent=t;box.appendChild(m);box.scrollTop=box.scrollHeight}
+document.getElementById("send").onclick=sendChat;
+document.getElementById("chatInput").addEventListener("keydown",e=>{if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendChat()}});
+
+async function generateImage(){
+ const prompt=document.getElementById("prompt").value.trim(); if(!prompt)return alert("Prompt ولیکئ.");
+ const loader=document.getElementById("imageLoader"), preview=document.getElementById("preview"); loader.style.display="block";
+ try{
+  const body={model:document.getElementById("model").value,prompt};
+  const r=document.getElementById("ratio").value; body.aspect_ratio=r;
+  const res=await fetch(BASE+"/images",{method:"POST",headers:{"Authorization":"Bearer "+API_KEY,"Content-Type":"application/json"},body:JSON.stringify(body)});
+  const d=await res.json(); if(!res.ok)throw new Error(d.error?.message||"Image API error");
+  const item=d.data?.[0]; let src=item?.b64_json?("data:"+(item.media_type||"image/png")+";base64,"+item.b64_json):item?.url;
+  if(!src && d.choices?.[0]?.message?.images?.[0]?.image_url?.url)src=d.choices[0].message.images[0].image_url.url;
+  if(!src)throw new Error("د تصویر معلومات ونه موندل شول.");
+  preview.innerHTML=""; const img=document.createElement("img");img.src=src;preview.appendChild(img);
+  const a=document.createElement("a");a.href=src;a.download="nova-ai-image.png";a.textContent="⬇️ Download";a.className="btn";a.style.position="absolute";a.style.marginTop="360px";preview.appendChild(a);
+ }catch(e){preview.innerHTML='<div class="placeholder">❌ '+escapeHtml(e.message)+'</div>'}finally{loader.style.display="none"}
+}
+function escapeHtml(s){return s.replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]))}
+document.getElementById("generate").onclick=generateImage;
+</script>
+</body>
+</html>
